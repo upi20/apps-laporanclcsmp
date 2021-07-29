@@ -1,0 +1,8 @@
+Database tabel utang column pake float
+
+Cek tabel rabs, realisasi pake float
+
+ubah password cabang dan administrator
+
+
+rekap
