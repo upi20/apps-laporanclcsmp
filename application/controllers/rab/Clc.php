@@ -624,4 +624,11 @@ class Clc extends Render_Controller
             ]
         );
     }
+
+    public function resetRab()
+    {
+        $id = $this->input->post("reset-rab");
+        $result = $this->clc->resetRab($id);
+        $this->output_json($result);
+    }
 }

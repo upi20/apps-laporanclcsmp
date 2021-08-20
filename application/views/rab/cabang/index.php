@@ -69,6 +69,7 @@
                 <button class="btn btn-creative btn-success my-2" data-toggle="modal" data-target="#importModal" onclick="$('#importModal').modal('toggle')"><i class="fa fa-download" aria-hidden="true"></i> Import Excel </button>
             <?php endif; ?>
             <a class="btn btn-creative btn-secondary my-2" href="<?= base_url() ?>rab/clc/export_excel?cabang=<?= $id_cabang ?>"><i class="fa fa-copy" aria-hidden="true"></i> Eksport Excel </a>
+            <button class="btn btn-creative btn-danger my-2" id="btn-reset-rab"><i class="fa fa-refresh" aria-hidden="true"></i> Reset RAB</button>
             <ul class="ps-0 chat-user-list  my-2 " id="list-body">
             </ul>
         </div>
@@ -99,7 +100,7 @@
                                 <div class="col-6">
                                     <label for="harga_ringgit" class="form-label">Harga (RM)</label>
                                     <input class="form-control" type="number" step="any" name="harga_ringgit" id="harga_ringgit" required>
-                                    <input class="form-control" type="hidden" step="any" name="val_harga_ringgit" id="val_harga_ringgit">
+                                    <input class="form-control" type=form-reset-rab"hidden" step="any" name="val_harga_ringgit" id="val_harga_ringgit">
                                 </div>
                                 <div class="col-6">
                                     <label for="harga_rupiah" class="form-label">harga (Rp)</label>
@@ -205,6 +206,31 @@
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
                     <button class="btn btn-sm btn-success" type="submit" form="form-import">Import</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Static Backdrop Modal-->
+    <div class="modal fade" id="modal-reset" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="importModalLabel">Reset RAB</h6>
+                    <button class="btn btn-close p-1 ms-auto" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" id="form-reset-rab">
+                        <h1 class="h5">Apakah anda yakin akan me-reset seluruh RAB cabang sekolah ini. ?</h1>
+                        <p>Reset RAB ini akan mengubah seluruh nilai volume dan jumlah satuan dan total harga menjadi nol.!</p>
+                        <p>Sebelum me-reset RAB ini harap download/export excel terlebih dahulu.!</p>
+                        <input type="hidden" name="reset-rab" id="reset-rab" value="<?= $id_cabang ?>">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-sm btn-danger" type="submit" form="form-reset-rab">Reset</button>
                 </div>
             </div>
         </div>

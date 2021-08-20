@@ -57,6 +57,7 @@
     }
 
     $btn_ajukan = '<button type="button" class="btn btn-success my-1" style="margin-right:10px" id="btn-ajukan"><i class="fa fa-upload" aria-hidden="true"> </i>  Ajukan Proposal</button>';
+    $btn_batal = '<button type="button" class="btn btn-danger my-1" style="margin-right:10px" id="btn-batal"><i class="fa fa-times" aria-hidden="true"> </i>  Batal Ajukan</button>';
     $btn_hapus = '<button type="button" class="btn btn-danger my-1" style="margin-right:10px"  data-bs-toggle="modal" data-bs-target="#hapusModal"> <i class="fa fa-trash" aria-hidden="true"> </i>  Hapus Proposal</button>';
     $btn_simpan = '<button type="submit" class="btn btn-warning my-1" style="margin-right:10px"> <i class="fa fa-floppy-o" aria-hidden="true"> </i>  Simpan Proposal </button>';
     $btn_excel = '<a type="submit" class="btn btn-success my-1" style="margin-right:10px" href="' . base_url() . 'rab/proposal/exportexcel?id_cabang=' . $id_cabang . '&id_proposal=' . $id_proposal . '"> <i class="fa fa-file-excel-o" aria-hidden="true"> </i>  Ekspor Excel </a>';
@@ -127,6 +128,9 @@
           } else if ($proposal['status'] == 0 || $proposal['status'] == 3) {
             echo $btn_hapus;
             echo $btn_excel;
+          } else if ($proposal['status'] == 1) {
+            echo $btn_batal;
+            echo $btn_excel;
           } else {
             echo $btn_excel;
           }
@@ -195,23 +199,10 @@
             $total_harga_rupiah = isset($list['jumlah_rupiah']) ? $list['jumlah_rupiah'] : $list['total_harga_rupiah'];
             $id_proposal = isset($list['id_proposal']) ? $list['id_proposal'] : '';
             $id_proposal_rab = isset($list['id_proposal_rab']) ? $list['id_proposal_rab'] : '';
-            ?>
+          ?>
             <label class="list-group-item d-flex w-100" for="listCheckbox<?= $list['id'] ?>">
-              <input class="form-check-input me-2 check"
-              id="listCheckbox<?= $list['id'] ?>"
-              type="checkbox"
-              value="" <?= $hidden == "" ? 'style="width: 25px; height: 25px; margin-right: 10px;"' :
-              $hidden ?>
-              data-id="<?= $list['id'] ?>"
-              data-ringgit="<?= $list['harga_ringgit'] ?>"
-              data-rupiah="<?= $list['harga_rupiah'] ?>"
-              data-total_ringgit="<?= $total_harga_ringgit ?>"
-              data-total_rupiah="<?= $total_harga_rupiah ?>"
-              data-jumlah_1="<?= $list['jumlah_1'] ?>"
-              data-id_proposal="<?= $id_proposal ?>"
-              data-id_proposal_rab="<?= $id_proposal_rab ?>"
-              <?= $list['ischeck'] == 0 ? "" : "checked" ?>
-              >
+              <input class="form-check-input me-2 check" id="listCheckbox<?= $list['id'] ?>" type="checkbox" value="" <?= $hidden == "" ? 'style="width: 25px; height: 25px; margin-right: 10px;"' :
+                                                                                                                        $hidden ?> data-id="<?= $list['id'] ?>" data-ringgit="<?= $list['harga_ringgit'] ?>" data-rupiah="<?= $list['harga_rupiah'] ?>" data-total_ringgit="<?= $total_harga_ringgit ?>" data-total_rupiah="<?= $total_harga_rupiah ?>" data-jumlah_1="<?= $list['jumlah_1'] ?>" data-id_proposal="<?= $id_proposal ?>" data-id_proposal_rab="<?= $id_proposal_rab ?>" <?= $list['ischeck'] == 0 ? "" : "checked" ?>>
 
               <div class="chat-user-info w-100">
                 <div class="d-flex flex-column">
@@ -230,17 +221,10 @@
                 <div class="form-group">
                   Volume: <span class="form-label"><?= $list['jumlah_1'] ?></span>
                 </div>
-                <?php if ($list['input'] == 1) :?>
+                <?php if ($list['input'] == 1) : ?>
                   <div class="form-group">
                     <label class="form-label" for="input-realisasi-<?= $list['id'] ?>">Volume Realisasi</label>
-                    <input type="number" class="form-control input-jumlah-proposal"
-                    name="input-realisasi-<?= $list['id'] ?>"
-                    id="input-realisasi-<?= $list['id'] ?>"
-                    value="<?= $jumlah_1_realisasi ?>"
-                    data-id="<?= $list['id'] ?>"
-                    data-ringgit="<?= $list['harga_ringgit'] ?>"
-                    data-max="<?= $list['jumlah_1'] ?>"
-                    required>
+                    <input type="number" class="form-control input-jumlah-proposal" name="input-realisasi-<?= $list['id'] ?>" id="input-realisasi-<?= $list['id'] ?>" value="<?= $jumlah_1_realisasi ?>" data-id="<?= $list['id'] ?>" data-ringgit="<?= $list['harga_ringgit'] ?>" data-max="<?= $list['jumlah_1'] ?>" required>
                   </div>
                 <?php else : ?>
                   <div class="form-group">
@@ -299,6 +283,26 @@
           <div class="modal-footer">
             <button class="btn btn-sm btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
             <button class="btn btn-sm btn-danger" type="button" id="btn-hapus-submit">Yes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="batalModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="batalModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form action="" method="POST" id="form-reset">
+          <div class="modal-header">
+            <h6 class="modal-title" id="batalModalLabel">Batal Pengajuan Proposal</h6>
+            <button class="btn btn-close p-1 ms-auto" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Apakah anda yakin akan Membatalkan Pengajuan proposal ini ?</p>
+            <input type="hidden" name="id_proposal" value="<?= $id_proposal1 ?>">
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-sm btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-sm btn-danger" type="submit" id="btn-batal-submit">Yes</button>
           </div>
         </form>
       </div>

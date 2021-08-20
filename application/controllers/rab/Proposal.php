@@ -71,6 +71,7 @@ class Proposal extends Render_Controller
             $data['proposal'] = $this->proposal->getProposal($id_proposal);
             $data['status'] = $status;
             $data['id_proposal'] = $id_proposal;
+            $data['id_proposal1'] = $id_proposal;
             $this->load->view("rab/cabang/proposal-detail", $data);
         }
     }
@@ -394,19 +395,19 @@ class Proposal extends Render_Controller
                             $jumlah_3 = $q['jumlah_3'];
                             $sheet->setCellValue(chr(65 + $c) . $row, $number);
                             $sheet->setCellValue(chr(65 + ++$c) . $row, $q['nama']);
-                            $col_jumlah_1 = chr(65 + ++$c). $row;
+                            $col_jumlah_1 = chr(65 + ++$c) . $row;
                             $sheet->setCellValue($col_jumlah_1, $jumlah_1);
                             $sheet->setCellValue(chr(65 + ++$c) . $row, $q['satuan_1']);
                             $sheet->setCellValue(chr(65 + ++$c) . $row, "");
-                            $col_jumlah_2 = chr(65 + ++$c). $row;
+                            $col_jumlah_2 = chr(65 + ++$c) . $row;
                             $sheet->setCellValue($col_jumlah_2, 1);
                             $sheet->setCellValue(chr(65 + ++$c) . $row, $q['satuan_2']);
                             $sheet->setCellValue(chr(65 + ++$c) . $row, "");
-                            $col_jumlah_3 = chr(65 + ++$c). $row;
+                            $col_jumlah_3 = chr(65 + ++$c) . $row;
                             $sheet->setCellValue($col_jumlah_3, 1);
                             $sheet->setCellValue(chr(65 + ++$c) . $row, $q['satuan_3']);
-                            $col_harga_ringgit = chr(65 + ++$c). $row;
-                            $sheet->setCellValue( $col_harga_ringgit , $q['harga_ringgit']);
+                            $col_harga_ringgit = chr(65 + ++$c) . $row;
+                            $sheet->setCellValue($col_harga_ringgit, $q['harga_ringgit']);
                             $sheet->setCellValue(chr(65 + ++$c) . $row, "=$col_jumlah_1*$col_jumlah_2*$col_jumlah_3*$col_harga_ringgit");
                             $number++;
                         }
@@ -561,5 +562,12 @@ class Proposal extends Render_Controller
 
         // The Roman numeral should be built, return it
         return $result;
+    }
+
+    public function batal()
+    {
+        $id_proposal = $this->input->post('id_proposal');
+        $result = $this->proposal->batal($id_proposal);
+        $this->output_json($result);
     }
 }

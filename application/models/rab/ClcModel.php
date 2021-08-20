@@ -275,4 +275,22 @@ class ClcModel extends Render_Model
             ->get()
             ->result_array();
     }
+
+    public function resetRab($id_cabang)
+    {
+        $this->db->where('id_cabang', $id_cabang);
+        $result = $this->db->update('rabs', [
+            'jumlah_1' => 0,
+            'jumlah_2' => 0,
+            'jumlah_3' => 0,
+            'jumlah_4' => 0,
+            'harga_ringgit' => 0,
+            'harga_rupiah' => 0,
+            'total_harga_ringgit' => 0,
+            'total_harga_rupiah' => 0,
+            'vol_realisasi_sisa' => 0,
+            'realisasi_status' => 0,
+        ]);
+        return $result;
+    }
 }

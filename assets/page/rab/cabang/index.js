@@ -34,6 +34,32 @@ $(document).ready(function () {
             })
     }
 
+    $("#btn-reset-rab").click(() => {
+        $("#modal-reset").modal('toggle');
+    })
+
+    $("#form-reset-rab").submit(function (ev) {
+        ev.preventDefault();
+        const formData = new FormData(this);
+        $.ajax({
+            type: 'POST',
+            url: base_url + 'rab/clc/resetRab',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                setToast('success', 'primary', 'Success', 'RAB berhasil di reset');
+                $("#modal-reset").modal('toggle');
+                dynamic();
+            },
+            error: function (data) {
+                setToast('danger', 'danger', 'Failed', 'RAB gagal di reset');
+                $("#modal-reset").modal('toggle');
+            }
+        });
+    })
+
     dynamic();
     // import submit
     $('#form-import').submit(function (ev) {

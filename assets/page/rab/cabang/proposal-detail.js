@@ -113,57 +113,57 @@ $(document).ready(function () {
 
         $(".check").each(function () {
             if (this.checked) {
-				rabs_sisa_id_proposal.push(this.dataset.id_proposal == "" ? 0 : this.dataset.id_proposal);
-				rabs_sisa_id_proposal_rab.push(this.dataset.id_proposal_rab == "" ? 0 : this.dataset.id_proposal_rab);
-				const id = this.dataset.id;
-				const jumlah_1_val = Number(this.dataset.jumlah_1);
-				const jumlah_1_realisasi_val = Number($("#input-realisasi-" + id).val());
+                rabs_sisa_id_proposal.push(this.dataset.id_proposal == "" ? 0 : this.dataset.id_proposal);
+                rabs_sisa_id_proposal_rab.push(this.dataset.id_proposal_rab == "" ? 0 : this.dataset.id_proposal_rab);
+                const id = this.dataset.id;
+                const jumlah_1_val = Number(this.dataset.jumlah_1);
+                const jumlah_1_realisasi_val = Number($("#input-realisasi-" + id).val());
 
-				const ringgit_rab = parseFloat(this.dataset.ringgit) * jumlah_1_realisasi_val;
-				const rupiah_rab = parseFloat(this.dataset.rupiah) * jumlah_1_realisasi_val;
+                const ringgit_rab = parseFloat(this.dataset.ringgit) * jumlah_1_realisasi_val;
+                const rupiah_rab = parseFloat(this.dataset.rupiah) * jumlah_1_realisasi_val;
 
-				id_rabs.push(this.dataset.id);
+                id_rabs.push(this.dataset.id);
 
-				ringgit.push(ringgit_rab);
-				rupiah.push(rupiah_rab);
+                ringgit.push(ringgit_rab);
+                rupiah.push(rupiah_rab);
 
-				total_ringgit += ringgit_rab;
-				total_rupiah += rupiah_rab;
+                total_ringgit += ringgit_rab;
+                total_rupiah += rupiah_rab;
 
-				jumlah_1.push(jumlah_1_val);
-				jumlah_1_realisasi.push(jumlah_1_realisasi_val);
-				jumlah_1_sisa.push(jumlah_1_val - jumlah_1_realisasi_val);
+                jumlah_1.push(jumlah_1_val);
+                jumlah_1_realisasi.push(jumlah_1_realisasi_val);
+                jumlah_1_sisa.push(jumlah_1_val - jumlah_1_realisasi_val);
             }
         });
 
         $("#total-rm").text("RM " + format_ringgit(global_total_ringgit));
 
-		const rabs = JSON.stringify({
-			id_rabs: id_rabs,
-			ringgit: ringgit,
-			rupiah: rupiah,
-			jumlah_1: jumlah_1,
-			jumlah_1_realisasi: jumlah_1_realisasi,
-			jumlah_1_sisa: jumlah_1_sisa,
-			sisa_id_proposal: rabs_sisa_id_proposal,
-			sisa_id_proposal_rab: rabs_sisa_id_proposal_rab
-		});
+        const rabs = JSON.stringify({
+            id_rabs: id_rabs,
+            ringgit: ringgit,
+            rupiah: rupiah,
+            jumlah_1: jumlah_1,
+            jumlah_1_realisasi: jumlah_1_realisasi,
+            jumlah_1_sisa: jumlah_1_sisa,
+            sisa_id_proposal: rabs_sisa_id_proposal,
+            sisa_id_proposal_rab: rabs_sisa_id_proposal_rab
+        });
 
         // return;
         $.ajax({
             method: 'post',
             url: base_url + 'rab/proposal/update',
             data: {
-				id_proposal: id_proposal.val(),
-				id_cabang: global_id_cabang,
-				judul: judul.val(),
-				keterangan: keterangan.val(),
-				rabs: rabs,
-				ringgit: total_ringgit,
-				rupiah: total_rupiah,
-				tanggal_dari: tanggal_dari.val(),
-				tanggal_sampai: tanggal_sampai.val(),
-				termin: termin.val(),
+                id_proposal: id_proposal.val(),
+                id_cabang: global_id_cabang,
+                judul: judul.val(),
+                keterangan: keterangan.val(),
+                rabs: rabs,
+                ringgit: total_ringgit,
+                rupiah: total_rupiah,
+                tanggal_dari: tanggal_dari.val(),
+                tanggal_sampai: tanggal_sampai.val(),
+                termin: termin.val(),
             }
         }).done((data) => {
             global_oke_ajukan = true;
@@ -250,6 +250,35 @@ $(document).ready(function () {
         $("#input-realisasi-total-val-" + id).val(total);
         setBtnUbah()
     });
+
+
+    $("#btn-batal").click(() => {
+        $("#batalModal").modal("toggle");
+    });
+
+    $("#form-reset").submit(function (ev) {
+        ev.preventDefault();
+        const formData = new FormData(this);
+        $.ajax({
+            type: 'POST',
+            url: base_url + 'rab/proposal/batal',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                setToast('success', 'primary', 'Success', 'RAB berhasil di reset');
+                $("#batalModal").modal('toggle');
+                setTimeout(function () {
+                    location.href = base_url + "rab/proposal";
+                }, 2000)
+            },
+            error: function (data) {
+                setToast('danger', 'danger', 'Failed', 'RAB gagal di reset');
+                $("#batalModal").modal('toggle');
+            }
+        });
+    });
 });
 
 function handleSetAllCheckbox(data) {
@@ -264,19 +293,19 @@ function setBtnUbah() {
 }
 
 function cekSaldo() {
-	let jumlah_total_ringgit = 0;
-	let jumlah_total_rupiah = 0;
-	$(".check").each(function () {
-		if (this.checked) {
-			const jumlah_1_realisasi = Number($("#input-realisasi-" + this.dataset.id).val());
-			const jumlah_1_ringgit = parseFloat(this.dataset.ringgit);
-			const jumlah_1_rupiah = parseFloat(this.dataset.rupiah);
-			jumlah_total_ringgit += (jumlah_1_realisasi * jumlah_1_ringgit);
-			jumlah_total_rupiah += (jumlah_1_realisasi * jumlah_1_rupiah);
+    let jumlah_total_ringgit = 0;
+    let jumlah_total_rupiah = 0;
+    $(".check").each(function () {
+        if (this.checked) {
+            const jumlah_1_realisasi = Number($("#input-realisasi-" + this.dataset.id).val());
+            const jumlah_1_ringgit = parseFloat(this.dataset.ringgit);
+            const jumlah_1_rupiah = parseFloat(this.dataset.rupiah);
+            jumlah_total_ringgit += (jumlah_1_realisasi * jumlah_1_ringgit);
+            jumlah_total_rupiah += (jumlah_1_realisasi * jumlah_1_rupiah);
 
-			global_total_ringgit = jumlah_total_ringgit;
-			global_total_rupiah = jumlah_total_rupiah;
-		}
-	});
-	$("#total-rm").text("RM " + format_ringgit(jumlah_total_ringgit));
+            global_total_ringgit = jumlah_total_ringgit;
+            global_total_rupiah = jumlah_total_rupiah;
+        }
+    });
+    $("#total-rm").text("RM " + format_ringgit(jumlah_total_ringgit));
 }

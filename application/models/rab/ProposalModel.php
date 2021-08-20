@@ -396,4 +396,11 @@ class ProposalModel extends Render_Model
 
         return $aktifitas_rows;
     }
+
+    public function batal($id_proposal)
+    {
+        $this->db->where('id', $id_proposal);
+        $result = $this->db->update('proposal', ['status' => 0]);
+        return $result;
+    }
 }

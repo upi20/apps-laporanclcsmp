@@ -1,8 +1,7 @@
-Database tabel utang column pake float
-
-Cek tabel rabs, realisasi pake float
-
-ubah password cabang dan administrator
-
-
-rekap
+1. Buat tolmbol reset RAB [clear]
+2. Proposal Batal Pengajuan
+3. Realisasi
+    Button Lihat
+4. Realisasi Batal
+5. Dana Sisa
+6. Dana Kurang
